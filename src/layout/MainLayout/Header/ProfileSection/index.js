@@ -55,9 +55,9 @@ const ProfileSection = () => {
      * anchorRef is used on different componets and specifying one type leads to other components throwing an error
      * */
     const anchorRef = useRef(null);
-    const handleLogout = async () => {
-        console.log('Logout');
-    };
+    // const handleLogout = async () => {
+    //     console.log('Logout');
+    // };
 
     const handleClose = (event) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -87,6 +87,13 @@ const ProfileSection = () => {
         prevOpen.current = open;
     }, [open]);
 
+    const Navigate = useNavigate();
+
+    const logoutHandler = () =>{
+        localStorage.clear();
+        Navigate("pages/login/login3", {replace : true})
+    }
+
     return (
         <>
             <Chip
@@ -110,7 +117,18 @@ const ProfileSection = () => {
                     }
                 }}
                 icon={
-                    <Avatar sx={{ bgcolor: deepPurple[900] }}>{localStorage.getItem("userEmail").split("")[0].toUpperCase()}</Avatar>
+                    <Avatar
+                        src={User1}
+                        sx={{
+                            ...theme.typography.mediumAvatar,
+                            margin: '8px 0 8px 8px !important',
+                            cursor: 'pointer'
+                        }}
+                        ref={anchorRef}
+                        aria-controls={open ? 'menu-list-grow' : undefined}
+                        aria-haspopup="true"
+                        color="inherit"
+                    />
                 }
                 label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
                 variant="outlined"
@@ -275,7 +293,7 @@ const ProfileSection = () => {
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 4}
-                                                    onClick={handleLogout}
+                                                    onClick={logoutHandler}
                                                 >
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
