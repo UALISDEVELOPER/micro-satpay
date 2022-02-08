@@ -28,7 +28,7 @@ const cacheRtl = createCache({
 
 
 //validation file
-import {loginValidate} from "./LoginValidition"
+import {loginValidate} from "./LoginValidation"
 
 //styles 
 import "../styles/login.scss"
