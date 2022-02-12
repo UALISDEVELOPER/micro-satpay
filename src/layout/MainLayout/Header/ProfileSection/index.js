@@ -26,6 +26,8 @@ import {
     Switch,
     Typography
 } from '@mui/material';
+import { deepPurple } from '@mui/material/colors';
+
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -117,18 +119,7 @@ const ProfileSection = () => {
                     }
                 }}
                 icon={
-                    <Avatar
-                        src={User1}
-                        sx={{
-                            ...theme.typography.mediumAvatar,
-                            margin: '8px 0 8px 8px !important',
-                            cursor: 'pointer'
-                        }}
-                        ref={anchorRef}
-                        aria-controls={open ? 'menu-list-grow' : undefined}
-                        aria-haspopup="true"
-                        color="inherit"
-                    />
+                    <Avatar sx={{ bgcolor: deepPurple[500] }}>OP</Avatar>
                 }
                 label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
                 variant="outlined"
