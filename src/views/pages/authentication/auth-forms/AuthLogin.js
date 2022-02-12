@@ -117,6 +117,7 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
 
         setLoading(true)
+
         
         if(!( errors.email || errors.password )){
             console.log("succed")
@@ -125,6 +126,8 @@ const FirebaseLogin = ({ ...others }) => {
                 console.log(response);
                 if(response.status ==200){
                     localStorage.setItem("userEmail", loginData.email);
+                    localStorage.setItem("accessToken", response.data.output.accessToken);
+                    localStorage.setItem("refreshToken", response.data.output.refreshToken);
                     console.log("loged in")
                     handleOpenSucceedSnackBar("ورود انجام شد")
                     navigate('/free' , {replace : true})
@@ -132,10 +135,13 @@ const FirebaseLogin = ({ ...others }) => {
                 setLoading(false)
             })
             .catch((error)=> {
-                // console.log(error.response.data);
+                console.log(error.response.data);
                 if(error.response.data.error =="Invalid email or password!"){
                     handleOpenFailedSnackBar("ایمیل یا رمزعبور وارد شده اشتباه میباشد");
-                }else{
+                }else if (error.response.data.error =='Operation `users.findOne()` buffering timed out after 10000ms!'){
+                    handleOpenFailedSnackBar("عملایت ناموفق مجدد تلاش کنید");
+                }
+                else{
                     handleOpenFailedSnackBar("مشکلی پیش آمده است اطلاعات وارد شده را بررسی کنید");
                 }
                 setLoading(false)

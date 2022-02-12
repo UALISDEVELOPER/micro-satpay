@@ -12,7 +12,7 @@ const other = {
     children: [
         {
             id: 'sample-page',
-            title: 'Sample Page',
+            title: 'ساخت برنامه',
             type: 'item',
             url: '/sample-page',
             icon: icons.IconBrandChrome,
