@@ -61,6 +61,13 @@ const ProfileSection = () => {
     //     console.log('Logout');
     // };
 
+    const [avatar, setAvatar] = useState("");
+
+    useEffect(()=>{
+        setAvatar(localStorage.getItem("userEmail").split("")[0].toUpperCase());
+        // console.log(localStorage.getItem("userEmail").split("")[0].toUpperCase());
+    },[])
+
     const handleClose = (event) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
@@ -119,7 +126,7 @@ const ProfileSection = () => {
                     }
                 }}
                 icon={
-                    <Avatar sx={{ bgcolor: deepPurple[500] }}>OP</Avatar>
+                    <Avatar sx={{ bgcolor: deepPurple[900] }}> {avatar} </Avatar>
                 }
                 label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
                 variant="outlined"
