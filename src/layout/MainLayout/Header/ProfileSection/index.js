@@ -105,37 +105,71 @@ const ProfileSection = () => {
 
     return (
         <>
-            <Chip
-                sx={{
-                    height: '48px',
-                    alignItems: 'center',
-                    borderRadius: '27px',
-                    transition: 'all .2s ease-in-out',
-                    borderColor: theme.palette.primary.light,
-                    backgroundColor: theme.palette.primary.light,
-                    '&[aria-controls="menu-list-grow"], &:hover': {
-                        borderColor: theme.palette.primary.main,
-                        background: `${theme.palette.primary.main}!important`,
-                        color: theme.palette.primary.light,
-                        '& svg': {
-                            stroke: theme.palette.primary.light
+            {localStorage.getItem("userEmail")?
+                <Chip
+                    sx={{
+                        height: '48px',
+                        alignItems: 'center',
+                        borderRadius: '27px',
+                        transition: 'all .2s ease-in-out',
+                        borderColor: theme.palette.primary.light,
+                        backgroundColor: theme.palette.primary.light,
+                        '&[aria-controls="menu-list-grow"], &:hover': {
+                            borderColor: theme.palette.primary.main,
+                            background: `${theme.palette.primary.main}!important`,
+                            color: theme.palette.primary.light,
+                            '& svg': {
+                                stroke: theme.palette.primary.light
+                            }
+                        },
+                        '& .MuiChip-label': {
+                            lineHeight: 0
                         }
-                    },
-                    '& .MuiChip-label': {
-                        lineHeight: 0
+                    }}
+                    icon={
+                        <Avatar sx={{ bgcolor: deepPurple[900] }}> {avatar} </Avatar>
                     }
-                }}
-                icon={
-                    <Avatar sx={{ bgcolor: deepPurple[900] }}> {avatar} </Avatar>
-                }
-                label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
-                variant="outlined"
-                ref={anchorRef}
-                aria-controls={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
-                color="primary"
-            />
+                    label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
+                    variant="outlined"
+                    ref={anchorRef}
+                    aria-controls={open ? 'menu-list-grow' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                    color="primary"
+                />
+                :
+                <Chip
+                    sx={{
+                        height: '48px',
+                        alignItems: 'center',
+                        borderRadius: '27px',
+                        transition: 'all .2s ease-in-out',
+                        borderColor: theme.palette.primary.light,
+                        backgroundColor: theme.palette.primary.light,
+                        '&[aria-controls="menu-list-grow"], &:hover': {
+                            borderColor: theme.palette.primary.main,
+                            background: `${theme.palette.primary.main}!important`,
+                            color: theme.palette.primary.light,
+                            '& svg': {
+                                stroke: theme.palette.primary.light
+                            }
+                        },
+                        '& .MuiChip-label': {
+                            lineHeight: 0
+                        }
+                    }}
+                    icon={
+                        <Avatar sx={{ bgcolor: deepPurple[900] }}> hi </Avatar>
+                    }
+                    label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
+                    variant="outlined"
+                    ref={anchorRef}
+                    aria-controls={open ? 'menu-list-grow' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                    color="primary"
+                />
+            }
             <Popper
                 placement="bottom-end"
                 open={open}
