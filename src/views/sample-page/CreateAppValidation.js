@@ -9,6 +9,14 @@ export const createAppValidation = data =>{
     }
     //appName validation
 
+    if(!data.mode){ 
+        errors.mode =true;
+        errors.modeMessage = "یکی از موارد را انتخاب کنید";
+    }else{
+        delete errors.mode;
+    }
+    //mode validation
+
     if(!data.scope.length){ 
         errors.scope ="یکی از موارد را انتخاب کنید"
     }else{
