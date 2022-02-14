@@ -163,7 +163,7 @@ const SamplePage = () => {
             ...scopeChecked,
             [event.target.value] : event.target.checked,
         })
-        console.log(scopeChecked);
+        // console.log(scopeChecked);
     }
 
     let finalScope = [];
@@ -186,22 +186,53 @@ const SamplePage = () => {
 
     //================= activity type (scope) ========================
 
+    //==================== adding IP =================================
+
+    const [ipState , setIpState] = useState("");
+
+    const [ipArray, setIpArray] = useState([]);
+    
+    const ipValueHandler = (event) =>{
+        setIpState(event.target.value)
+    }
+    
+    const addIpHandler = () =>{
+        if(ipState!==""){
+            setIpArray([
+                ...ipArray,
+                ipState
+            ])
+            setIpState("")
+            // console.log(ipArray);
+        }
+    }
+
+    useEffect(()=>{
+        setCreateApp({
+            ...createApp,
+            ip : ipArray
+        })
+    },[ipArray])
+
+    //==================== adding IP =================================
 
     const [createApp, setCreateApp] = useState({
         // email: 'alizadea123@gmail.com',
         // password: '12345678',
         mode: "",
         appName:"",
-        scope: []
+        scope: [],
+        ip :[]
     });
     
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         setErrors(createAppValidation(createApp));
-        console.log(createApp);
-        console.log(errors);
+        // console.log(createApp);
+        // console.log(errors);
     }, [createApp]);
+
 
     const valueHandler = (event) => {
         setCreateApp({
@@ -231,19 +262,22 @@ const SamplePage = () => {
 
     const createAppHandler = (event) =>{
         event.preventDefault();
+        
+
 
         setLoading(true)
         console.log(errors);
+        console.log(createApp);
 
         const config = {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8' ,
-                'Authorization' : `${localStorage.getItem("accessToken")}` ,
+                'Authorization' : `${localStorage.getItem("refreshToken")}` ,
             }
         }
         
         if(!(errors.appName || errors.scope==='یکی از موارد را انتخاب کنید' || errors.mode===false)){
-            console.log("succed");
+            console.log("sending data");
             axios.post("https://dev3.satpay.ir/create-app", createApp, config)
             .then(response => {
                 console.log(response)
@@ -255,7 +289,7 @@ const SamplePage = () => {
             })
         }else{
             handleOpenFailedSnackBar("فرم را تکمیل کنید");
-            console.log("fail");
+            console.log("fillout form");
             setLoading(false)
         }
     }
@@ -346,93 +380,195 @@ const SamplePage = () => {
                                     <span className='error-span'>{errors.mode && touched.mode && <p>{errors.modeMessage}</p>} </span>
                                 </Grid>
                                 <Grid item xs={12} className="inputDiv">
-                                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} name="scope">
-                                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                            <Typography>انتخاب نوع فعالیت برنامه</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                        <Typography>
-                                            <FormGroup aria-label="position" row>
-                                                <FormControlLabel
-                                                value="GOV"
-                                                control={<Checkbox />}
-                                                label="GOV"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="GOV"
-                                                />
-                                                <FormControlLabel
-                                                value="smartCity"
-                                                control={<Checkbox />}
-                                                label="smartCity"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="smartCity"
-                                                />
-                                                <FormControlLabel
-                                                value="wallet"
-                                                control={<Checkbox />}
-                                                label="wallet"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope={"wallet"}
-                                                />
-                                                <FormControlLabel
-                                                value="bourse"
-                                                control={<Checkbox />}
-                                                label="bourse"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="bourse"
-                                                />
-                                                <FormControlLabel
-                                                value="openBanking"
-                                                control={<Checkbox />}
-                                                label="openBanking"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="openBanking"
-                                                />
-                                                <FormControlLabel
-                                                value="blockChain"
-                                                control={<Checkbox />}
-                                                label="blockChain"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="blockChain"
-                                                />
-                                                <FormControlLabel
-                                                value="tourism"
-                                                control={<Checkbox />}
-                                                label="tourism"
-                                                labelPlacement="bottom"
-                                                onClick={scopeHandler}
-                                                removeScope="tourism"
-                                                />
-                                            </FormGroup>
-                                        </Typography>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <span>{errors.scope && touched.scope && <p>{errors.scope}</p>} </span>
-                                </Grid>
-                                <Grid item xs={12} className="inputDiv">
                                     <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                                         <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
                                             <Typography>مشاهده و اضافه کردن آی پی</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                        <Typography>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspbottomisse
-                                            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum dolor
-                                            sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                            sit amet blandit leo lobortis eget.
-                                        </Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid container className='adding-ip-inputs-div'>
+                                                <Grid item xs={12} sm={8}>
+                                                    <TextField
+                                                        type="text"
+                                                        id="filled-basic"
+                                                        label="آی پی"
+                                                        variant="filled"
+                                                        onChange={ipValueHandler}
+                                                        name="appName"
+                                                        value={ipState}
+                                                        onBlur={touchedHandler}
+                                                        fullWidth
+                                                        id="name-input"
+                                                        className="ipInput"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                    <Button variant="contained" spacing={2} onClick={addIpHandler} >
+                                                        افزودن آی پی
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                            <hr/>
+                                            <Grid item xs={12}>
+                                                <h3>لیست آی پی ها</h3>
+                                                {
+                                                    ipArray.map(item=> 
+                                                        <Grid container className='ip-list' key={item}>
+                                                            <Grid item xs={6} className='itemGrid'>
+                                                                {item}
+                                                            </Grid>
+                                                            <Grid item xs={6} className='buttonGrid'>
+                                                                <Button variant="contained" spacing={2}>
+                                                                    حذف آی پی
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    )
+                                                }
+                                            </Grid>
+                                        </Grid>
                                         </AccordionDetails>
                                     </Accordion>
                                     <span>{errors.mode && touched.mode && <p>{errors.mode}</p>} </span>
                                 </Grid>
                                 <Grid item xs={12} className="inputDiv">
-                                    <Button variant="contained" color="success" fullWidth onClick={createAppHandler}>
+                                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} name="scope">
+                                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                                            <Typography>انتخاب نوع فعالیت برنامه</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid container spacing={2}>
+                                                <FormGroup aria-label="position" row>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="GOV"
+                                                        control={<Checkbox />}
+                                                        label="GOV"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="GOV"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="smartCity"
+                                                        control={<Checkbox />}
+                                                        label="smartCity"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="smartCity"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="wallet"
+                                                        control={<Checkbox />}
+                                                        label="wallet"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope={"wallet"}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="bourse"
+                                                        control={<Checkbox />}
+                                                        label="bourse"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="bourse"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="openBanking"
+                                                        control={<Checkbox />}
+                                                        label="openBanking"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="openBanking"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="blockChain"
+                                                        control={<Checkbox />}
+                                                        label="blockChain"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="blockChain"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6} sm={4} className='checkbox-grid'>
+                                                        <FormControlLabel
+                                                        value="tourism"
+                                                        control={<Checkbox />}
+                                                        label="tourism"
+                                                        labelPlacement="start"
+                                                        onClick={scopeHandler}
+                                                        removeScope="tourism"
+                                                        />
+                                                    </Grid>
+                                                </FormGroup>
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    <span>{errors.scope && touched.scope && <p>{errors.scope}</p>} </span>
+                                </Grid>
+                                {/* <Grid item xs={12} className="inputDiv">
+                                    <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+                                        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+                                            <Typography>مشاهده و اضافه کردن آی پی</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                        <Grid container spacing={2}>
+                                            <Grid container className='adding-ip-inputs-div'>
+                                                <Grid item xs={12} sm={8}>
+                                                    <TextField
+                                                        type="text"
+                                                        id="filled-basic"
+                                                        label="آی پی"
+                                                        variant="filled"
+                                                        onChange={ipValueHandler}
+                                                        name="appName"
+                                                        value={ipState}
+                                                        onBlur={touchedHandler}
+                                                        fullWidth
+                                                        id="name-input"
+                                                        className="ipInput"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                    <Button variant="contained" spacing={2} onClick={addIpHandler} >
+                                                        افزودن آی پی
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                            <hr/>
+                                            <Grid item xs={12}>
+                                                <h3>لیست آی پی ها</h3>
+                                                {
+                                                    ipArray.map(item=> 
+                                                        <Grid container className='ip-list' key={item}>
+                                                            <Grid item xs={6} className='itemGrid'>
+                                                                {item}
+                                                            </Grid>
+                                                            <Grid item xs={6} className='buttonGrid'>
+                                                                <Button variant="contained" spacing={2}>
+                                                                    حذف آی پی
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    )
+                                                }
+                                            </Grid>
+                                        </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    <span>{errors.mode && touched.mode && <p>{errors.mode}</p>} </span>
+                                </Grid> */}
+                                <Grid item xs={12} className="inputDiv">
+                                    <Button variant="contained" color="success" fullWidth onClick={createAppHandler} className='submitButton'>
                                     ساخت برنامه
                                     </Button>
                                 </Grid>

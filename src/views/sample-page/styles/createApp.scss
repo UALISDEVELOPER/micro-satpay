@@ -79,14 +79,64 @@
                 font-weight: 700;
             }
         }
-        button{
+        .checkbox-grid{
+            text-align: center;
+            transition: all .5s;
+            height: 50px;
+        }
+        .checkbox-grid:hover{
+            background-color: #d1f0fc;
+        }
+        .adding-ip-inputs-div{
+            text-align: center;
+            padding: 15px;
+            label{
+                
+            }
+            input{
+                height: 20px;
+            }
+            button{
+                height: 40px;
+                margin-top: 10px;
+            }
+        }
+        .ip-list{
+            height: 40px;
+            transition: all .5s;
+            padding: 10px;
+            .itemGrid{
+                text-align: right;
+            }
+            .buttonGrid{
+                text-align: left;
+                button{
+                    height: 25px;
+                    margin-top: -5px;
+                    background-color: #eb2a2a;
+                }
+                button:hover{
+                    background-color: #ca0000;
+                }
+            }
+        }
+        .ip-list:hover{
+            background-color:#d1f0fc ;
+        }
+        hr{
+            text-align: center;
+            margin: auto;
+            width: 90%;
+            border: .5px solid #7c7c7c;
+        }
+        .submitButton{
             height: 40px;
             font-weight: 900;
             font-size: 20px;
             color: white; 
             background-color: green;
         }
-        button:hover{
+        .submitButton:hover{
             background-color: #673AB7;
         }
     }
