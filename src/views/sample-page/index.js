@@ -242,7 +242,7 @@ const SamplePage = () => {
 
     useEffect(() => {
         setErrors(createAppValidation(createApp));
-        console.log(createApp);
+        // console.log(createApp);
         // console.log(errors);
     }, [createApp]);
 
