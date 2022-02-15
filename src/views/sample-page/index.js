@@ -216,20 +216,33 @@ const SamplePage = () => {
 
     //==================== adding IP =================================
 
+    //===================== scale =========================
+
+    const scaleHandler = (event) => {
+        setCreateApp({
+            ...createApp,
+            scale : event.target.value
+        });
+    };
+    //this function helps select form to work properly
+
+    //===================== scale =========================
+
     const [createApp, setCreateApp] = useState({
         // email: 'alizadea123@gmail.com',
         // password: '12345678',
         mode: "",
         appName:"",
         scope: [],
-        ip :[]
+        ip :[],
+        scale:""
     });
     
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         setErrors(createAppValidation(createApp));
-        // console.log(createApp);
+        console.log(createApp);
         // console.log(errors);
     }, [createApp]);
 
@@ -363,7 +376,7 @@ const SamplePage = () => {
                                 </Grid>
                                 <Grid item xs={12} className="inputDiv">
                                     <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} fullWidth className='formControl'>
-                                        <InputLabel id="demo-simple-select-filled-label" fullWidth>پلن برنامه</InputLabel>
+                                        <InputLabel id="demo-simple-select-filled-label" fullWidth>محیط برنامه</InputLabel>
                                         <Select
                                         labelId="demo-simple-select-filled-label"
                                         id="demo-simple-select-filled"
@@ -380,9 +393,29 @@ const SamplePage = () => {
                                     <span className='error-span'>{errors.mode && touched.mode && <p>{errors.modeMessage}</p>} </span>
                                 </Grid>
                                 <Grid item xs={12} className="inputDiv">
+                                    <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} fullWidth className='formControl'>
+                                        <InputLabel id="demo-simple-select-filled-label" fullWidth>پلن برنامه</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-filled-label"
+                                        id="demo-simple-select-filled"
+                                        value={createApp.scale}
+                                        onChange={scaleHandler}
+                                        onBlur={touchedHandler}
+                                        name="scale"
+                                        fullWidth
+                                        >
+                                            <MenuItem value={"startUp"}>استارت آپ</MenuItem>
+                                            <MenuItem value={"smb"}>کسب و کار های کوچک</MenuItem>
+                                            <MenuItem value={"mdb"}>کسب و کار های متوسط</MenuItem>
+                                            <MenuItem value={"lgb"}>کسب و کار های بزرگ</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <span className='error-span'>{errors.scale && touched.scale && <p>{errors.scaleMessage}</p>} </span>
+                                </Grid>
+                                <Grid item xs={12} className="inputDiv">
                                     <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                                         <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-                                            <Typography>مشاهده و اضافه کردن آی پی</Typography>
+                                            <Typography className='section-headers'>مشاهده و اضافه کردن آی پی</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                         <Grid container spacing={2}>
@@ -434,7 +467,7 @@ const SamplePage = () => {
                                 <Grid item xs={12} className="inputDiv">
                                     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} name="scope">
                                         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                            <Typography>انتخاب نوع فعالیت برنامه</Typography>
+                                            <Typography className='section-headers'>انتخاب نوع فعالیت برنامه</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Grid container spacing={2}>
@@ -515,58 +548,6 @@ const SamplePage = () => {
                                     </Accordion>
                                     <span>{errors.scope && touched.scope && <p>{errors.scope}</p>} </span>
                                 </Grid>
-                                {/* <Grid item xs={12} className="inputDiv">
-                                    <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-                                        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-                                            <Typography>مشاهده و اضافه کردن آی پی</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                        <Grid container spacing={2}>
-                                            <Grid container className='adding-ip-inputs-div'>
-                                                <Grid item xs={12} sm={8}>
-                                                    <TextField
-                                                        type="text"
-                                                        id="filled-basic"
-                                                        label="آی پی"
-                                                        variant="filled"
-                                                        onChange={ipValueHandler}
-                                                        name="appName"
-                                                        value={ipState}
-                                                        onBlur={touchedHandler}
-                                                        fullWidth
-                                                        id="name-input"
-                                                        className="ipInput"
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={4}>
-                                                    <Button variant="contained" spacing={2} onClick={addIpHandler} >
-                                                        افزودن آی پی
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                            <hr/>
-                                            <Grid item xs={12}>
-                                                <h3>لیست آی پی ها</h3>
-                                                {
-                                                    ipArray.map(item=> 
-                                                        <Grid container className='ip-list' key={item}>
-                                                            <Grid item xs={6} className='itemGrid'>
-                                                                {item}
-                                                            </Grid>
-                                                            <Grid item xs={6} className='buttonGrid'>
-                                                                <Button variant="contained" spacing={2}>
-                                                                    حذف آی پی
-                                                                </Button>
-                                                            </Grid>
-                                                        </Grid>
-                                                    )
-                                                }
-                                            </Grid>
-                                        </Grid>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <span>{errors.mode && touched.mode && <p>{errors.mode}</p>} </span>
-                                </Grid> */}
                                 <Grid item xs={12} className="inputDiv">
                                     <Button variant="contained" color="success" fullWidth onClick={createAppHandler} className='submitButton'>
                                     ساخت برنامه

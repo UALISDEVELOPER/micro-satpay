@@ -17,6 +17,14 @@ export const createAppValidation = data =>{
     }
     //mode validation
 
+    if(!data.scale){ 
+        errors.scale =true;
+        errors.scaleMessage = "یکی از موارد را انتخاب کنید";
+    }else{
+        delete errors.scale;
+    }
+    //scale validation
+
     if(!data.scope.length){ 
         errors.scope ="یکی از موارد را انتخاب کنید"
     }else{
