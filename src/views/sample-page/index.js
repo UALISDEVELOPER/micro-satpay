@@ -229,8 +229,6 @@ const SamplePage = () => {
     //===================== scale =========================
 
     const [createApp, setCreateApp] = useState({
-        // email: 'alizadea123@gmail.com',
-        // password: '12345678',
         mode: "",
         appName:"",
         scope: [],
@@ -242,7 +240,7 @@ const SamplePage = () => {
 
     useEffect(() => {
         setErrors(createAppValidation(createApp));
-        // console.log(createApp);
+        console.log(createApp);
         // console.log(errors);
     }, [createApp]);
 
@@ -278,32 +276,39 @@ const SamplePage = () => {
         
 
 
-        setLoading(true)
+        setLoading(true);
         console.log(errors);
         console.log(createApp);
 
         const config = {
             headers: {
-                'Content-type': 'application/json; charset=UTF-8' ,
-                'Authorization' : `${localStorage.getItem("refreshToken")}` ,
+                "Content-type": 'application/json; charset=UTF-8' ,
+                // 'Authorization' : `${localStorage.getItem("refreshToken")}` ,
+                "Authorization" : `bearer ${localStorage.getItem("refreshToken")}`,
             }
         }
         
-        if(!(errors.appName || errors.scope==='یکی از موارد را انتخاب کنید' || errors.mode===false)){
+        if(errors.appName===true || errors.scope===true || errors.mode===true || errors.scale ===true || errors.ip === true){
+            handleOpenFailedSnackBar("فرم را تکمیل کنید");
+            console.log("fillout form");
+            setLoading(false)
+        }else{
             console.log("sending data");
             axios.post("https://dev3.satpay.ir/create-app", createApp, config)
             .then(response => {
+                if(response.status==201){
+                    handleOpenSucceedSnackBar("برنامه با موفقیت ساخته شد ")
+                }
                 console.log(response)
                 setLoading(false)
                 })
             .catch((error)=> {
+                if(error.response.data.error=='This application name exsits, Please enter a valid one.!'){
+                    handleOpenFailedSnackBar("این نام برنامه قبل انتخاب شده است");
+                }
                 console.log(error.response.data);
                 setLoading(false)
             })
-        }else{
-            handleOpenFailedSnackBar("فرم را تکمیل کنید");
-            console.log("fillout form");
-            setLoading(false)
         }
     }
 
@@ -462,7 +467,7 @@ const SamplePage = () => {
                                         </Grid>
                                         </AccordionDetails>
                                     </Accordion>
-                                    <span>{errors.mode && touched.mode && <p>{errors.mode}</p>} </span>
+                                    <span>{errors.ip && touched.ip && <p>{errors.ip}</p>} </span>
                                 </Grid>
                                 <Grid item xs={12} className="inputDiv">
                                     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} name="scope">
