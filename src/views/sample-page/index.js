@@ -283,7 +283,6 @@ const SamplePage = () => {
         const config = {
             headers: {
                 "Content-type": 'application/json; charset=UTF-8' ,
-                // 'Authorization' : `${localStorage.getItem("refreshToken")}` ,
                 "Authorization" : `bearer ${localStorage.getItem("refreshToken")}`,
             }
         }

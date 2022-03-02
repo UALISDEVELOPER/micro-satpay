@@ -128,9 +128,10 @@ const FirebaseLogin = ({ ...others }) => {
                     localStorage.setItem("userEmail", loginData.email);
                     localStorage.setItem("accessToken", response.data.output.accessToken);
                     localStorage.setItem("refreshToken", response.data.output.refreshToken);
-                    console.log("loged in")
-                    handleOpenSucceedSnackBar("ورود انجام شد")
-                    navigate('/free' , {replace : true})
+                    console.log(response.data.output.refreshToken);
+                    console.log("loged in");
+                    handleOpenSucceedSnackBar("ورود انجام شد");
+                    navigate('/free' , {replace : true});
                 }
                 setLoading(false)
             })

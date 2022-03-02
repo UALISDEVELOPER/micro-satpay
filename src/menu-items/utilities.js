@@ -18,7 +18,7 @@ const utilities = {
     children: [
         {
             id: 'util-typography',
-            title: 'Typography',
+            title: 'لیست برنامه ها',
             type: 'item',
             url: '/utils/util-typography',
             icon: icons.IconTypography,
