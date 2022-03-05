@@ -26,7 +26,7 @@ const utilities = {
         },
         {
             id: 'util-color',
-            title: 'Color',
+            title: 'لاگ فعالیت های کاربران',
             type: 'item',
             url: '/utils/util-color',
             icon: icons.IconPalette,

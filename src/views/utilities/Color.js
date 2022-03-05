@@ -1,227 +1,218 @@
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-// material-ui
-import { Box, Card, Grid, Typography } from '@mui/material';
 
-// project imports
-import SubCard from 'ui-component/cards/SubCard';
-import MainCard from 'ui-component/cards/MainCard';
-import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
-import { gridSpacing } from 'store/constant';
+//mui
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
-// ===============================|| COLOR BOX ||=============================== //
+//mui table
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
-const ColorBox = ({ bgcolor, title, data, dark }) => (
-    <>
-        <Card sx={{ mb: 3 }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    py: 4.5,
-                    bgcolor,
-                    color: dark ? 'grey.800' : '#ffffff'
-                }}
-            >
-                {title && (
-                    <Typography variant="subtitle1" color="inherit">
-                        {title}
-                    </Typography>
-                )}
-                {!title && <Box sx={{ p: 1.15 }} />}
-            </Box>
-        </Card>
-        {data && (
-            <Grid container justifyContent="space-between" alignItems="center">
-                <Grid item>
-                    <Typography variant="subtitle2">{data.label}</Typography>
+//mui accordion
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+//style
+import "./style/color.scss"
+
+const UIColor = () => {
+
+
+    //================= accordion ======================
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+    //================= accordion ======================
+
+
+    //================= filter data ====================
+
+    const [filterData, setFilterData] = useState({
+        appName : "",
+        userID : "" ,
+        url : ""
+    })
+
+
+    const handleChangeValue = (event) => {
+        setFilterData({
+            ...filterData,
+            [event.target.name] : event.target.value 
+        });
+      };
+
+      const handleChangeSelectForm = (event) => {
+        setFilterData({
+            ...filterData,
+            url : event.target.value
+        });
+      };
+
+      const submitFilter = () =>{
+            const URL = `https://dev3.satpay.ir/log/read?SDate=&EDate=&appName=${filterData.appName}&skip=&url=${filterData.url}&userID=`;
+            const config = {
+                headers: {
+                    "Content-type": 'application/json; charset=UTF-8' ,
+                    "Authorization" : `bearer ${localStorage.getItem("refreshToken")}`,
+                }
+            }
+            axios.get(URL, config)
+                .then(response =>{
+                    console.log(response);
+                    setTookenData(response.data.output.data)   
+                })
+                .catch(error => console.log(error.response))
+
+                console.log(URL);
+      }
+
+    //================= filter data ====================
+
+
+    const [tookenData, setTookenData] = useState(false)
+
+    useEffect(()=>{
+
+        const URL = `https://dev3.satpay.ir/log/read?SDate=&EDate=&appName=${filterData.appName}&skip=&url=${filterData.url}&userID=`;
+        const config = {
+            headers: {
+                "Content-type": 'application/json; charset=UTF-8' ,
+                "Authorization" : `bearer ${localStorage.getItem("refreshToken")}`,
+            }
+        }
+        axios.get(URL, config)
+            .then(response =>{
+                console.log(response);
+                setTookenData(response.data.output.data)   
+            })
+            .catch(error => console.log(error.response))
+    },[])
+      
+    return(
+
+        <>
+            <Grid container spacing={2}>
+                <Grid item xs={0} sm={0} md={2}></Grid>
+                <Grid item xs={12} sm={12} md={8} component={Paper} className='searchFieldsGrid'>
+                    <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} fullWidth className='formControl'>
+                        <InputLabel id="demo-simple-select-filled-label" fullWidth>URL</InputLabel>
+                        <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="demo-simple-select-filled"
+                        value={filterData.url}
+                        onChange={handleChangeSelectForm}
+                        name="url"
+                        fullWidth
+                        >
+                        <MenuItem value={""}>All</MenuItem>
+                        <MenuItem value={"/signup"}>Signup</MenuItem>
+                        <MenuItem value={"/login"}>Login</MenuItem>
+                        <MenuItem value={"/create-app"}>Create app</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        id="filled-basic"
+                        label="نام برنامه"
+                        variant="filled"
+                        className='formControl'
+                        onChange={handleChangeValue}
+                        name="appName"
+                        value={filterData.appName}
+                    />
+                    <button onClick={submitFilter}>
+                        اعمال فیلتر
+                    </button>
                 </Grid>
-                <Grid item>
-                    <Typography variant="subtitle1" sx={{ textTransform: 'uppercase' }}>
-                        {data.color}
-                    </Typography>
-                </Grid>
+                <Grid item xs={0} sm={0} md={2}></Grid>
+
             </Grid>
-        )}
-    </>
-);
-
-ColorBox.propTypes = {
-    bgcolor: PropTypes.string,
-    title: PropTypes.string,
-    data: PropTypes.object.isRequired,
-    dark: PropTypes.bool
+            <Grid container spacing={2}>
+                <Grid item xs={0} sm={0} md={2}></Grid>
+                <Grid item xs={12} sm={12} md={8} component={Paper}>
+                    <TableContainer>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="right">اطلاعات</TableCell>
+                                    <TableCell align="right">URL</TableCell>
+                                </TableRow>
+                            </TableHead>
+                                {tookenData && 
+                                    <TableBody>
+                                        {tookenData.map(item => {
+                                            return(
+                                                <TableRow>
+                                                    <TableCell align="right">
+                                                        <Accordion className="accordin"expanded={expanded === item._id} onChange={handleChange(item._id)}>
+                                                            <AccordionSummary
+                                                            expandIcon={<ExpandMoreIcon />}
+                                                            aria-controls="panel1a-content"
+                                                            id="panel1a-header"
+                                                            >
+                                                                <p className='accordionTitle'>id = {item._id} </p>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails className="AccordionDetails">
+                                                                <div>
+                                                                    <p>Input :</p>
+                                                                    <span>{item.input}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>Output :</p>
+                                                                    <span>{item.output}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>CreatedAt :</p>
+                                                                    <span>{item.createdAt}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>Header :</p>
+                                                                    <span>{item.header}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>StatusCode :</p>
+                                                                    <span>{item.statusCode}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>TrackId :</p>
+                                                                    <span>{item.trackId}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p>UpdatedAt :</p>
+                                                                    <span>{item.updatedAt}</span>
+                                                                </div>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {item.url}
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        })}
+                                    </TableBody>
+                                }
+                        </Table>
+                    </TableContainer>
+                </Grid>
+                <Grid item xs={0} sm={0} md={2}></Grid>
+            </Grid>
+        </>
+    )
 };
-
-// ===============================|| UI COLOR ||=============================== //
-
-const UIColor = () => (
-    <MainCard title="Color Palette" secondary={<SecondaryAction link="https://next.material-ui.com/system/palette/" />}>
-        <Grid container spacing={gridSpacing}>
-            <Grid item xs={12}>
-                <SubCard title="Primary Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.light" data={{ label: 'Blue-50', color: '#E3F2FD' }} title="primary.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.200" data={{ label: 'Blue-200', color: '#90CAF9' }} title="primary[200]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.main" data={{ label: 'Blue-500', color: '#2196F3' }} title="primary.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.dark" data={{ label: 'Blue-600', color: '#1E88E5' }} title="primary.dark" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.800" data={{ label: 'Blue-800', color: '#1565C0' }} title="primary[800]" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Secondary Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox
-                                bgcolor="secondary.light"
-                                data={{ label: 'DeepPurple-50', color: '#ede7f6' }}
-                                title="secondary.light"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox
-                                bgcolor="secondary.200"
-                                data={{ label: 'DeepPurple-200', color: '#b39ddb' }}
-                                title="secondary[200]"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox
-                                bgcolor="secondary.main"
-                                data={{ label: 'DeepPurple-500', color: '#673ab7' }}
-                                title="secondary.main"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox
-                                bgcolor="secondary.dark"
-                                data={{ label: 'DeepPurple-600', color: '#5e35b1' }}
-                                title="secondary.dark"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="secondary.800" data={{ label: 'DeepPurple-800', color: '#4527a0' }} title="secondary[800]" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Success Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="success.light" data={{ label: 'Green-A100', color: '#b9f6ca' }} title="success.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="success.main" data={{ label: 'Green-A200', color: '#69f0ae' }} title="success[200]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="success.main" data={{ label: 'Green-A400', color: '#69f0ae' }} title="success.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="success.dark" data={{ label: 'Green-A700', color: '#00c853' }} title="success.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Orange Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox
-                                bgcolor="orange.light"
-                                data={{ label: 'DeepOrange-50', color: '#fbe9e7' }}
-                                title="orange.light"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="orange.main" data={{ label: 'DeepOrange-200', color: '#ffab91' }} title="orange.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="orange.dark" data={{ label: 'DeepOrange-800', color: '#d84315' }} title="orange.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Error Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="error.light" data={{ label: 'Red-50', color: '#ef9a9a' }} title="error.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="error.main" data={{ label: 'Red-200', color: '#f44336' }} title="error.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="error.dark" data={{ label: 'Red-800', color: '#c62828' }} title="error.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Warning Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="warning.light" data={{ label: 'Amber-50', color: '#b9f6ca' }} title="warning.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="warning.main" data={{ label: 'Amber-100', color: '#ffe57f' }} title="warning.main" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="warning.dark" data={{ label: 'Amber-500', color: '#FFC107' }} title="warning.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Grey Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.50" data={{ label: 'Grey-50', color: '#fafafa' }} title="grey[50]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.100" data={{ label: 'Grey-100', color: '#f5f5f5' }} title="grey[100]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.200" data={{ label: 'Grey-200', color: '#eeeeee' }} title="grey[200]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.300" data={{ label: 'Grey-300', color: '#e0e0e0' }} title="grey[300]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.500" data={{ label: 'Grey-500', color: '#9e9e9e' }} title="grey[500]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.700" data={{ label: 'Grey-600', color: '#757575' }} title="grey[600]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.700" data={{ label: 'Grey-700', color: '#616161' }} title="grey[700]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.900" data={{ label: 'Grey-900', color: '#212121' }} title="grey[900]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="#fff" data={{ label: 'Pure White', color: '#ffffff' }} title="Pure White" dark />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-        </Grid>
-    </MainCard>
-);
 
 export default UIColor;

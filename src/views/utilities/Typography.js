@@ -57,6 +57,7 @@ const Typography = () => {
     const handleClickOpen = (appName) => {
         setOpen(true);
         setTookenDetails(tookenData.find((item)=> item.appName === appName));
+        console.log(tookenDetails);
     };
     const handleClose = () => {
         setOpen(false);
@@ -173,11 +174,6 @@ const Typography = () => {
                     onClose={handleClose}
                 />
                 {/* ========Dialog========== */}
-
-
-                {/* <button onClick={handleClickOpen}>
-                    open dialog
-                </button> */}
             </Grid>
             <Grid item xs={0} sm={0} md={2}></Grid>
         </Grid>
